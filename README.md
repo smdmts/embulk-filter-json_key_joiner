@@ -15,7 +15,7 @@ Join to json default key-value to defined JSON Type column.
 
 filters:
   - type: json_key_joiner
-    json_column_name: record // JSON Type Column
+    json_column_name: record # JSON Type Column
     key_value:
       append_key: append_value
 ```
