@@ -9,6 +9,7 @@ import org.embulk.spi.{
 import org.embulk.filter.json_key_joiner.json.JsonParser
 
 case class SetValueColumnVisitor(reader: PageReader,
+                                 columnName: String,
                                  joiner: Map[String, String])
     extends EmbulkColumnVisitor {
   import scala.collection.mutable
@@ -31,9 +32,15 @@ case class SetValueColumnVisitor(reader: PageReader,
   override def booleanColumn(column: Column): Unit =
     value(column, reader.getBoolean)
 
+  val jsonParser = new org.embulk.spi.json.JsonParser()
   override def jsonColumn(column: Column): Unit = {
-    val json = JsonParser(reader.getJson(column).toJson, joiner).noSpaces
-    valueHolderSet.add(ValueHolder(column, Some(spiParser.parse(json))))
+    if (column.getName == columnName) {
+      val json = JsonParser(reader.getJson(column).toJson, joiner)
+      valueHolderSet.add(
+        ValueHolder(column, Some(jsonParser.parse(json.noSpaces))))
+    } else {
+      value(column, reader.getJson)
+    }
   }
 
   def value[A](column: Column, method: => (Column => A)): Option[A] = {

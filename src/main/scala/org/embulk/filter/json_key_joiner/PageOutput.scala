@@ -19,11 +19,14 @@ case class PageOutput(task: PluginTask,
   val pageBuilder = new PageBuilder(Exec.getBufferAllocator, schema, output)
   override def add(page: Page): Unit = {
     val baseReader: PageReader = new PageReader(schema)
+    baseReader.setPage(page)
     while (baseReader.nextRecord()) {
       val visitor = SetValueColumnVisitor(
         baseReader,
+        task.getJsonColumnName,
         task.getKeyWithIndex.asScala.toMap
       )
+      schema.visitColumns(visitor)
       visitor.getRow(pageBuilder).addRecord()
     }
     baseReader.close()

@@ -1,29 +1,38 @@
 # Json Key Joiner filter plugin for Embulk
 
-TODO: Write short description here and build.gradle file.
-
-## Overview
+Join to json default key-value to defined JSON Type column.
 
 * **Plugin type**: filter
 
 ## Configuration
 
-- **option1**: description (integer, required)
-- **option2**: description (string, default: `"myvalue"`)
-- **option3**: description (string, default: `null`)
+- **key_value**: joining key value (hash Map[String,String], required)
+- **json_column_name**: processing json column (string, required)
 
 ## Example
 
 ```yaml
+
 filters:
   - type: json_key_joiner
-    option1: example1
-    option2: example2
+    json_column_name: record // JSON Type Column
+    key_value:
+      append_key: append_value
+```
+
+- before json
+```
+{ "key1":"value1" }
+```
+
+- after json
+```
+{ "key1":"value1" , "append_key":"append_value" }
 ```
 
 
 ## Build
 
 ```
-$ ./gradlew gem  # -t to watch change of files and rebuild continuously
+$ ./gradlew gem 
 ```

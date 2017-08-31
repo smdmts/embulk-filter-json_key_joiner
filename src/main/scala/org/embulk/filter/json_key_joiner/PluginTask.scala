@@ -8,4 +8,7 @@ trait PluginTask extends Task {
   @ConfigDefault("{}")
   def getKeyWithIndex: java.util.Map[String, String]
 
+  @Config("json_column_name")
+  def getJsonColumnName: String
+
 }
